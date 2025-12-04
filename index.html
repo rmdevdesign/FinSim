@@ -7,39 +7,6 @@
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
   </head>
-  <script>
-    let inputOverlay = null;
-
-    function showMobileInputField(x = '50%', y = '50%') {
-      if (inputOverlay) return;
-
-      inputOverlay = document.createElement("input");
-      inputOverlay.type = "text";
-      inputOverlay.placeholder = "Tape ici...";
-      inputOverlay.style.position = "absolute";
-      inputOverlay.style.top = y;
-      inputOverlay.style.left = x;
-      inputOverlay.style.transform = "translate(-50%, -50%)";
-      inputOverlay.style.zIndex = 9999;
-      inputOverlay.style.fontSize = "16px";
-      inputOverlay.style.padding = "8px";
-      inputOverlay.style.border = "1px solid #ccc";
-      inputOverlay.style.borderRadius = "5px";
-      inputOverlay.style.opacity = 1;
-
-      document.body.appendChild(inputOverlay);
-      inputOverlay.focus();
-
-      inputOverlay.addEventListener("blur", () => {
-        // Facultatif : envoyer le texte à Unity
-        if (typeof unityInstance !== "undefined") {
-          unityInstance.SendMessage("GameManager", "ReceiveText", inputOverlay.value);
-        }
-        document.body.removeChild(inputOverlay);
-        inputOverlay = null;
-      });
-    }
-  </script>
   <body>
     <div id="unity-container" class="unity-desktop">
       <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
@@ -108,6 +75,15 @@
       // happening inside the engine, and you would instead like to size up
       // the canvas DOM size and WebGL render target sizes yourself.
       // config.matchWebGLToCanvasSize = false;
+
+      // If you would like all file writes inside Unity Application.persistentDataPath
+      // directory to automatically persist so that the contents are remembered when
+      // the user revisits the site the next time, uncomment the following line:
+      // config.autoSyncPersistentDataPath = true;
+      // This autosyncing is currently not the default behavior to avoid regressing
+      // existing user projects that might rely on the earlier manual
+      // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
+      // expected to change.
 
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Mobile device style: fill the whole browser client area with the game canvas:
