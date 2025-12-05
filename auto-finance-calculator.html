@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur Auto-Entrepreneur</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .input-group input[type="number"],
+        .input-group input[type="text"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .toggle-group label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .toggle-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+
+        .result-column {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .result-column h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .result-item {
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .result-item strong {
+            color: #333;
+        }
+
+        .result-section {
+            margin-bottom: 20px;
+        }
+
+        .result-section-title {
+            font-weight: 700;
+            color: #444;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .total-revenue {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #c33;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .results {
+                grid-template-columns: 1fr;
+            }
+
+            .input-section {
+                padding: 20px;
+            }
+
+            .toggle-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .input-section {
+                padding: 15px;
+            }
+
+            .result-column {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>💼 Calculateur Auto-Entrepreneur</h1>
+            <p>Simulez votre revenu mensuel avec précision</p>
+        </div>
+
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="ca">💰 Chiffre d'affaires mensuel (€)</label>
+                    <input type="number" id="ca" step="0.01" value="0" min="0">
+                </div>
+
+                <div class="input-group">
+                    <label for="impots">📊 Taux d'imposition (%)</label>
+                    <input type="number" id="impots" step="0.01" value="12" min="0" max="100">
+                </div>
+
+                <div class="input-group">
+                    <label for="urssaf">🏥 Taux URSSAF brut (%)</label>
+                    <input type="number" id="urssaf" step="0.01" value="24.6" min="0" max="100">
+                </div>
+
+                <div class="toggle-group">
+                    <label>
+                        <input type="checkbox" id="acre" checked>
+                        ✨ ACRE (réduction 50%)
+                    </label>
+                </div>
+
+                <div class="toggle-group">
+                    <label>
+                        <input type="checkbox" id="are">
+                        💼 Je perçois l'ARE (chômage)
+                    </label>
+                </div>
+
+                <div class="input-group" id="allocationGroup" style="display: none;">
+                    <label for="allocation">📅 Allocation journalière ARE (€)</label>
+                    <input type="number" id="allocation" step="0.01" value="73.27" min="0">
+                </div>
+            </div>
+
+            <div id="error" class="error-message" style="display: none;"></div>
+
+            <div class="results">
+                <div class="result-column" id="leftColumn"></div>
+                <div class="result-column" id="rightColumn"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Éléments DOM
+        const caInput = document.getElementById('ca');
+        const impotsInput = document.getElementById('impots');
+        const urssafInput = document.getElementById('urssaf');
+        const acreCheckbox = document.getElementById('acre');
+        const areCheckbox = document.getElementById('are');
+        const allocationInput = document.getElementById('allocation');
+        const allocationGroup = document.getElementById('allocationGroup');
+        const leftColumn = document.getElementById('leftColumn');
+        const rightColumn = document.getElementById('rightColumn');
+        const errorDiv = document.getElementById('error');
+
+        // Afficher/masquer l'input allocation ARE
+        areCheckbox.addEventListener('change', () => {
+            allocationGroup.style.display = areCheckbox.checked ? 'block' : 'none';
+            calculer();
+        });
+
+        // Événements de calcul
+        [caInput, impotsInput, urssafInput, acreCheckbox, areCheckbox, allocationInput].forEach(element => {
+            element.addEventListener('input', calculer);
+            element.addEventListener('change', calculer);
+        });
+
+        function formatNumber(num) {
+            return num.toFixed(2).replace('.', ',');
+        }
+
+        function calculer() {
+            // Récupération des valeurs
+            const caMensuel = parseFloat(caInput.value) || 0;
+            const tauxImpots = parseFloat(impotsInput.value) || 0;
+            const tauxURSSAFBrut = parseFloat(urssafInput.value) || 0;
+            const hasAcre = acreCheckbox.checked;
+            const percoitARE = areCheckbox.checked;
+            const monAllocation = parseFloat(allocationInput.value) || 0;
+
+            // Validation
+            if (caMensuel < 0 || tauxImpots < 0 || tauxURSSAFBrut < 0) {
+                showError("Les valeurs ne peuvent pas être négatives.");
+                return;
+            }
+
+            hideError();
+
+            // Calculs
+            const tauxURSSAF = hasAcre ? (tauxURSSAFBrut / 100 / 2) : (tauxURSSAFBrut / 100);
+            const contributionFormation = caMensuel * 0.002;
+            const urssafPur = caMensuel * tauxURSSAF;
+            const cotisationsURSSAF = urssafPur + contributionFormation;
+
+            const baseImposable = caMensuel * (1 - 0.34);
+            const impotsMicro = baseImposable * (tauxImpots / 100);
+            const netMicro = caMensuel - cotisationsURSSAF - impotsMicro;
+
+            let areBrute = 0;
+            let revenuFranceTravail = 0;
+            let are = 0;
+            let impotsARE = 0;
+            let areApresImpots = 0;
+
+            if (percoitARE) {
+                areBrute = monAllocation * 30;
+                revenuFranceTravail = caMensuel * 0.7;
+                are = Math.max(0, areBrute - revenuFranceTravail);
+                impotsARE = are * (tauxImpots / 100);
+                areApresImpots = are - impotsARE;
+            }
+
+            const revenuTotal = netMicro + areApresImpots;
+            const impotsTotaux = impotsMicro + impotsARE;
+
+            // Affichage colonne gauche
+            leftColumn.innerHTML = `
+                <div class="result-section">
+                    <div class="result-section-title">🧾 Revenu mensuel déclaré</div>
+                    <div class="result-item">CA : <strong>${formatNumber(caMensuel)} €</strong></div>
+                    <div class="result-item">ACRE : <strong>${hasAcre ? 'Oui' : 'Non'}</strong></div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-section-title">💼 Cotisations sociales</div>
+                    <div class="result-item">Taux URSSAF appliqué : <strong>${formatNumber(tauxURSSAF * 100)} %</strong></div>
+                    <div class="result-item">URSSAF : <strong>${formatNumber(urssafPur)} €</strong></div>
+                    <div class="result-item">Formation : <strong>${formatNumber(contributionFormation)} €</strong></div>
+                    <div class="result-item">Total cotisations : <strong>${formatNumber(cotisationsURSSAF)} €</strong></div>
+                </div>
+
+                <div class="result-section">
+                    <div class="result-section-title">💸 Impôts</div>
+                    <div class="result-item">Microentreprise : <strong>${formatNumber(impotsMicro)} €</strong></div>
+                    ${percoitARE ? `<div class="result-item">ARE : <strong>${formatNumber(impotsARE)} €</strong></div>` : ''}
+                    <div class="result-item">Total : <strong>${formatNumber(impotsTotaux)} €</strong></div>
+                </div>
+            `;
+
+            // Affichage colonne droite
+            let rightHTML = `
+                <div class="result-section">
+                    <div class="result-section-title">📊 Net microentreprise</div>
+                    <div class="result-item">Net après charges : <strong>${formatNumber(netMicro)} €</strong></div>
+                </div>
+            `;
+
+            if (percoitARE) {
+                rightHTML += `
+                    <div class="result-section">
+                        <div class="result-section-title">📉 ARE</div>
+                        <div class="result-item">Journalière : <strong>${formatNumber(monAllocation)} €</strong></div>
+                        <div class="result-item">Brute mensuelle : <strong>${formatNumber(areBrute)} €</strong></div>
+                        <div class="result-item">Revenu retenu (70% CA) : <strong>${formatNumber(revenuFranceTravail)} €</strong></div>
+                        <div class="result-item">ARE versée (brute) : <strong>${formatNumber(are)} €</strong></div>
+                        <div class="result-item">Impôt à la source : <strong>${formatNumber(impotsARE)} €</strong></div>
+                        <div class="result-item">ARE après impôt : <strong>${formatNumber(areApresImpots)} €</strong></div>
+                    </div>
+                `;
+            }
+
+            rightHTML += `
+                <div class="total-revenue">
+                    💰 Revenu total mensuel<br>
+                    ${formatNumber(revenuTotal)} €
+                </div>
+            `;
+
+            rightColumn.innerHTML = rightHTML;
+        }
+
+        function showError(message) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            leftColumn.innerHTML = '';
+            rightColumn.innerHTML = '';
+        }
+
+        function hideError() {
+            errorDiv.style.display = 'none';
+        }
+
+        // Calcul initial
+        calculer();
+    </script>
+</body>
+</html>
