@@ -7,32 +7,28 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg-body: #0f172a; /* Slate 900 */
-            --bg-card: #1e293b; /* Slate 800 */
-            --bg-input: #0f172a;
-            --border-color: #334155; /* Slate 700 */
-            --primary: #6366f1; /* Indigo 500 */
-            --accent: #10b981; /* Emerald 500 */
-            --text-main: #f1f5f9; /* Slate 100 */
-            --text-muted: #94a3b8; /* Slate 400 */
-            --radius: 12px;
+            --bg-body: #0f172a;
+            --bg-panel: rgba(30, 41, 59, 0.6);
+            --bg-input: #1e293b;
+            --border-color: #334155;
+            --primary: #6366f1;
+            --success: #10b981;
+            --danger: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --radius: 20px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-font-smoothing: antialiased;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-font-smoothing: antialiased; }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-body);
-            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 70%);
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 80%);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -43,276 +39,230 @@
 
         .dashboard {
             width: 100%;
-            max-width: 1200px;
+            max-width: 900px;
             display: grid;
-            grid-template-columns: 350px 1fr;
+            grid-template-columns: 320px 1fr;
             gap: 24px;
+            align-items: start;
         }
 
-        /* --- Panel Styles --- */
-        .panel {
-            background: rgba(30, 41, 59, 0.7);
+        /* --- Panel Gauche (Inputs) --- */
+        .panel-config {
+            background: var(--bg-panel);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: var(--radius);
-            padding: 32px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 24px;
         }
 
         .panel-header {
-            margin-bottom: 30px;
-        }
-
-        h1 {
-            font-size: 20px;
-            font-weight: 600;
-            letter-spacing: -0.5px;
-            color: var(--text-main);
-            margin-bottom: 4px;
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: var(--text-muted);
-        }
-
-        /* --- Inputs --- */
-        .control-group {
             margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
+
+        .panel-header h1 { font-size: 16px; font-weight: 600; color: var(--text-main); }
+
+        .control-group { margin-bottom: 20px; }
 
         label {
             display: block;
-            font-size: 12px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .input-wrapper {
-            position: relative;
-        }
-
-        .input-wrapper input {
-            width: 100%;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            transition: all 0.2s ease;
-        }
-
-        .input-wrapper input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
-
-        .currency-symbol {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-muted);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-        }
-
-        /* --- Toggles --- */
-        .toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            padding: 12px;
-            background: rgba(255,255,255,0.03);
-            border-radius: 8px;
-            cursor: pointer;
-        }
-
-        .toggle-label {
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-        }
-
-        /* Custom Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 44px;
-            height: 24px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            transition: .3s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 3px;
-            bottom: 3px;
-            background-color: var(--text-muted);
-            transition: .3s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(20px);
-            background-color: white;
-        }
-
-        /* --- Output Section --- */
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-        }
-
-        .result-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
-            padding: 20px;
-        }
-
-        .result-card.full-width {
-            grid-column: span 2;
-            background: linear-gradient(145deg, rgba(99, 102, 241, 0.1) 0%, rgba(15, 23, 42, 0.2) 100%);
-            border: 1px solid rgba(99, 102, 241, 0.2);
-        }
-
-        .stat-label {
             font-size: 11px;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             color: var(--text-muted);
             margin-bottom: 8px;
-            display: block;
         }
 
-        .stat-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 24px;
-            font-weight: 700;
+        .input-wrapper { position: relative; }
+
+        input[type="number"] {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
             color: var(--text-main);
-            display: block;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            transition: 0.2s;
         }
 
-        .stat-value.total {
-            font-size: 36px;
-            color: var(--accent);
-            text-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
         }
 
-        .breakdown-list {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(255,255,255,0.05);
+        .currency {
+            position: absolute;
+            right: 12px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 12px;
         }
 
-        .breakdown-item {
+        .toggle-row {
             display: flex;
             justify-content: space-between;
-            font-size: 13px;
-            margin-bottom: 8px;
+            align-items: center;
+            margin-bottom: 16px;
+            cursor: pointer;
+        }
+
+        .toggle-text { font-size: 13px; font-weight: 500; }
+
+        /* Switch CSS */
+        .switch { position: relative; width: 36px; height: 20px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; inset: 0;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            transition: .3s;
+        }
+        .slider:before {
+            position: absolute; content: "";
+            height: 14px; width: 14px;
+            left: 2px; bottom: 2px;
+            background-color: var(--text-muted);
+            border-radius: 50%;
+            transition: .3s;
+        }
+        input:checked + .slider { background-color: var(--primary); border-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(16px); background-color: white; }
+
+        /* --- Panel Droite (Single Result) --- */
+        .result-card {
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.3);
+        }
+
+        /* Hero Section */
+        .result-hero {
+            padding: 40px 32px;
+            text-align: center;
+            background: radial-gradient(circle at top, rgba(99, 102, 241, 0.15), transparent 70%);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .hero-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .hero-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 56px;
+            font-weight: 700;
+            color: var(--success);
+            text-shadow: 0 0 40px rgba(16, 185, 129, 0.2);
+            line-height: 1;
+        }
+
+        .hero-sub {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+
+        /* Details List */
+        .result-details {
+            padding: 32px;
+        }
+
+        .detail-group { margin-bottom: 24px; }
+        .detail-group:last-child { margin-bottom: 0; }
+
+        .group-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .line-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 14px;
             color: var(--text-muted);
         }
 
-        .breakdown-item span:last-child {
+        .line-item.total-line {
+            color: var(--text-main);
+            font-weight: 600;
+            padding-top: 12px;
+            margin-top: 12px;
+            border-top: 1px dashed rgba(255,255,255,0.1);
+        }
+
+        .mono {
             font-family: 'JetBrains Mono', monospace;
             color: var(--text-main);
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .val-pos { color: var(--text-main); }
+        .val-neg { color: var(--danger); }
+        .val-total { color: var(--success); }
 
-        .fade-in {
-            animation: fadeIn 0.4s ease-out forwards;
-        }
-
-        /* Responsive */
-        @media (max-width: 900px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-            .result-card.full-width {
-                grid-column: span 1;
-            }
+        @media (max-width: 800px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .hero-value { font-size: 42px; }
         }
     </style>
 </head>
 <body>
 
 <div class="dashboard">
-    <div class="panel">
+    <div class="panel-config">
         <div class="panel-header">
-            <h1>💼 Calculateur</h1>
-            <p class="subtitle">Auto-Entrepreneur</p>
+            <h1>⚙️ Paramètres</h1>
         </div>
 
         <div class="control-group">
-            <label>Chiffre d'affaires mensuel</label>
+            <label>CA Mensuel HT</label>
             <div class="input-wrapper">
-                <input type="number" id="ca" value="0" min="0" step="0.01">
-                <span class="currency-symbol">€</span>
+                <input type="number" id="ca" value="0" min="0" step="1">
+                <span class="currency">€</span>
             </div>
         </div>
 
         <div class="control-group">
-            <label>Taux d'imposition</label>
+            <label>Taux Impôts</label>
             <div class="input-wrapper">
-                <input type="number" id="impots" value="12" step="0.01">
-                <span class="currency-symbol">%</span>
+                <input type="number" id="impots" value="12" step="0.1">
+                <span class="currency">%</span>
             </div>
         </div>
 
         <div class="control-group">
-            <label>Taux URSSAF brut</label>
+            <label>Taux URSSAF</label>
             <div class="input-wrapper">
-                <input type="number" id="urssaf" value="24.6" step="0.01">
-                <span class="currency-symbol">%</span>
+                <input type="number" id="urssaf" value="24.6" step="0.1">
+                <span class="currency">%</span>
             </div>
         </div>
 
-        <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 20px 0;">
+        <div style="height: 1px; background: var(--border-color); margin: 24px 0;"></div>
 
         <label class="toggle-row">
-            <span class="toggle-label">✨ ACRE (réduction 50%)</span>
+            <span class="toggle-text">ACRE (-50%)</span>
             <div class="switch">
                 <input type="checkbox" id="acre" checked>
                 <span class="slider"></span>
@@ -320,37 +270,34 @@
         </label>
 
         <label class="toggle-row">
-            <span class="toggle-label">💼 Je perçois l'ARE (chômage)</span>
+            <span class="toggle-text">Complément ARE</span>
             <div class="switch">
                 <input type="checkbox" id="are">
                 <span class="slider"></span>
             </div>
         </label>
 
-        <div id="allocationGroup" class="control-group fade-in" style="display: none;">
-            <label>Allocation journalière ARE</label>
+        <div id="allocationGroup" class="control-group" style="display: none; margin-top: 20px;">
+            <label>Allocation Journalière</label>
             <div class="input-wrapper">
                 <input type="number" id="allocation" value="73.27" step="0.01">
-                <span class="currency-symbol">€</span>
+                <span class="currency">€</span>
             </div>
         </div>
     </div>
 
-    <div class="panel">
-        <div class="panel-header">
-            <h1>Résultats</h1>
-            <p class="subtitle">Analyse détaillée</p>
-        </div>
-
-        <div class="results-grid" id="resultsContainer">
-        </div>
-    </div>
+    <div id="resultContainer"></div>
 </div>
 
 <script>
-    // Fonction formatage monnaie
     const formatMoney = (amount) => {
-        return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
+        // Affichage avec 2 décimales forcées
+        return new Intl.NumberFormat('fr-FR', {
+            style: 'currency',
+            currency: 'EUR',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(amount);
     };
 
     const caInput = document.getElementById('ca');
@@ -360,14 +307,10 @@
     const areCheckbox = document.getElementById('are');
     const allocationInput = document.getElementById('allocation');
     const allocationGroup = document.getElementById('allocationGroup');
-    const resultsContainer = document.getElementById('resultsContainer');
+    const resultContainer = document.getElementById('resultContainer');
 
     areCheckbox.addEventListener('change', () => {
-        if (areCheckbox.checked) {
-            allocationGroup.style.display = 'block';
-        } else {
-            allocationGroup.style.display = 'none';
-        }
+        allocationGroup.style.display = areCheckbox.checked ? 'block' : 'none';
         calculer();
     });
 
@@ -377,7 +320,6 @@
     });
 
     function calculer() {
-        // Récupération des valeurs (IDENTIQUES AU FICHIER ORIGINAL)
         const caMensuel = parseFloat(caInput.value) || 0;
         const tauxImpots = parseFloat(impotsInput.value) || 0;
         const tauxURSSAFBrut = parseFloat(urssafInput.value) || 0;
@@ -385,7 +327,6 @@
         const percoitARE = areCheckbox.checked;
         const monAllocation = parseFloat(allocationInput.value) || 0;
 
-        // Logique de calcul (IDENTIQUE AU FICHIER ORIGINAL)
         const tauxURSSAF = hasAcre ? (tauxURSSAFBrut / 100 / 2) : (tauxURSSAFBrut / 100);
         const contributionFormation = caMensuel * 0.002;
         const urssafPur = caMensuel * tauxURSSAF;
@@ -397,92 +338,84 @@
 
         let areBrute = 0;
         let revenuFranceTravail = 0;
-        let are = 0;
+        let arePercue = 0;
         let impotsARE = 0;
-        let areApresImpots = 0;
+        let areNette = 0;
 
         if (percoitARE) {
             areBrute = monAllocation * 30;
             revenuFranceTravail = caMensuel * 0.7;
-            are = Math.max(0, areBrute - revenuFranceTravail);
-            impotsARE = are * (tauxImpots / 100);
-            areApresImpots = are - impotsARE;
+            arePercue = Math.max(0, areBrute - revenuFranceTravail);
+            impotsARE = arePercue * (tauxImpots / 100);
+            areNette = arePercue - impotsARE;
         }
 
-        const revenuTotal = netMicro + areApresImpots;
-        const impotsTotaux = impotsMicro + impotsARE;
+        const totalSuperNet = netMicro + areNette;
 
-        // Génération HTML Dashboard
-        let html = `
+        // Construction du HTML dynamique
+        let detailsHTML = `
                 <div class="result-card">
-                    <span class="stat-label">Microentreprise (Net)</span>
-                    <span class="stat-value">${formatMoney(netMicro)}</span>
-                    <div class="breakdown-list">
-                        <div class="breakdown-item">
-                            <span>Chiffre d'Affaires</span>
-                            <span>${formatMoney(caMensuel)}</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span>URSSAF (${(tauxURSSAF*100).toFixed(2)}%)</span>
-                            <span style="color: #f43f5e">-${formatMoney(urssafPur)}</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span>Formation</span>
-                            <span style="color: #f43f5e">-${formatMoney(contributionFormation)}</span>
-                        </div>
-                         <div class="breakdown-item">
-                            <span>Impôts (sur base 66%)</span>
-                            <span style="color: #f43f5e">-${formatMoney(impotsMicro)}</span>
-                        </div>
+                    <div class="result-hero">
+                        <div class="hero-label">Net Total dans votre poche</div>
+                        <div class="hero-value">${formatMoney(totalSuperNet)}</div>
+                        <div class="hero-sub">Après paiement de toutes les charges et impôts</div>
                     </div>
-                </div>
+                    
+                    <div class="result-details">
+                        <div class="detail-group">
+                            <div class="group-title">Activité Freelance</div>
+                            <div class="line-item">
+                                <span>Chiffre d'Affaires</span>
+                                <span class="mono val-pos">+ ${formatMoney(caMensuel)}</span>
+                            </div>
+                            <div class="line-item">
+                                <span>URSSAF & Formation</span>
+                                <span class="mono val-neg">- ${formatMoney(cotisationsURSSAF)}</span>
+                            </div>
+                            <div class="line-item">
+                                <span>Impôts (Versement Lib.)</span>
+                                <span class="mono val-neg">- ${formatMoney(impotsMicro)}</span>
+                            </div>
+                            <div class="line-item total-line">
+                                <span>Net Freelance</span>
+                                <span class="mono">${formatMoney(netMicro)}</span>
+                            </div>
+                        </div>
             `;
 
+        // Ajout Bloc ARE si actif
         if (percoitARE) {
-            html += `
-                <div class="result-card">
-                    <span class="stat-label">ARE (Pôle Emploi)</span>
-                    <span class="stat-value">${formatMoney(areApresImpots)}</span>
-                    <div class="breakdown-list">
-                        <div class="breakdown-item">
-                            <span>ARE Brute (30j)</span>
-                            <span>${formatMoney(areBrute)}</span>
+            detailsHTML += `
+                        <div class="detail-group" style="margin-top: 30px;">
+                            <div class="group-title">Complément Pôle Emploi</div>
+                            <div class="line-item">
+                                <span>Droits ARE (30 jours)</span>
+                                <span class="mono val-pos">+ ${formatMoney(areBrute)}</span>
+                            </div>
+                            <div class="line-item">
+                                <span>Déduction Revenus (70% CA)</span>
+                                <span class="mono val-neg">- ${formatMoney(revenuFranceTravail)}</span>
+                            </div>
+                             <div class="line-item">
+                                <span>Impôts estimés</span>
+                                <span class="mono val-neg">- ${formatMoney(impotsARE)}</span>
+                            </div>
+                            <div class="line-item total-line">
+                                <span>Net ARE</span>
+                                <span class="mono">${formatMoney(areNette)}</span>
+                            </div>
                         </div>
-                        <div class="breakdown-item">
-                            <span>Déduction (70% CA)</span>
-                            <span style="color: #f43f5e">-${formatMoney(revenuFranceTravail)}</span>
-                        </div>
-                        <div class="breakdown-item">
-                            <span>Impôts estimés</span>
-                            <span style="color: #f43f5e">-${formatMoney(impotsARE)}</span>
-                        </div>
-                    </div>
-                </div>
-                `;
-        } else {
-            html += `
-                <div class="result-card" style="display:flex; align-items:center; justify-content:center; opacity:0.3;">
-                    <span class="stat-label">ARE non activée</span>
-                </div>
                 `;
         }
 
-        html += `
-                <div class="result-card full-width">
-                    <span class="stat-label">Revenu Net Mensuel Total</span>
-                    <span class="stat-value total">${formatMoney(revenuTotal)}</span>
-                    <div class="breakdown-list" style="border-top-color: rgba(99, 102, 241, 0.2);">
-                        <div class="breakdown-item">
-                            <span style="color: var(--primary);">Total des impôts payés : ${formatMoney(impotsTotaux)}</span>
-                        </div>
+        detailsHTML += `
                     </div>
                 </div>
             `;
 
-        resultsContainer.innerHTML = html;
+        resultContainer.innerHTML = detailsHTML;
     }
 
-    // Init
     calculer();
 </script>
 </body>
