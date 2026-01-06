@@ -2,29 +2,22 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Freelance & ARE</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculateur Freelance & ARE</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            /* Palette de couleurs */
             --bg-app: #0f172a;
             --bg-card: #1e293b;
             --bg-input: #0f172a;
-
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
-
-            --primary: #6366f1; /* Indigo */
-            --primary-glow: rgba(99, 102, 241, 0.3);
-
-            --success: #10b981; /* Vert */
-            --warning: #f59e0b; /* Orange/Jaune pour ARE */
-            --danger: #ef4444;
-
+            --primary: #6366f1;
+            --success: #10b981;
+            --warning: #f59e0b;
             --border: rgba(255, 255, 255, 0.08);
             --radius: 16px;
         }
@@ -32,7 +25,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
         body {
-            font-family: 'Inter', sans-serif; /* Police unique partout */
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-app);
             color: var(--text-main);
             min-height: 100vh;
@@ -42,7 +35,6 @@
             align-items: flex-start;
         }
 
-        /* Layout Principal Grid */
         .dashboard {
             width: 100%;
             max-width: 1100px;
@@ -51,117 +43,80 @@
             gap: 24px;
         }
 
-        /* Sur PC : 2 colonnes (350px pour les réglages, le reste pour les résultats) */
-        @media (min-width: 900px) {
-            .dashboard {
-                grid-template-columns: 350px 1fr;
-                align-items: start;
-                margin-top: 40px;
-            }
-        }
-
-        /* --- CARTE REGLAGES (Gauche) --- */
+        /* --- CARTE REGLAGES --- */
         .settings-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 24px;
-            position: sticky;
-            top: 20px;
+            z-index: 10;
+            position: relative; 
         }
 
         h2 {
-            font-size: 14px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-muted);
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--border);
+            font-size: 13px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; color: var(--text-muted);
+            margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
         }
 
         .input-group { margin-bottom: 20px; }
-
+        
         label {
-            display: block;
-            font-size: 13px;
-            font-weight: 500;
-            color: var(--text-muted);
-            margin-bottom: 8px;
+            display: block; font-size: 13px; font-weight: 500;
+            color: var(--text-muted); margin-bottom: 8px;
         }
 
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
+        .input-wrapper { position: relative; display: flex; align-items: center; }
 
         input[type="number"] {
             width: 100%;
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: white;
-            padding: 14px 16px;
+            padding: 16px; 
             border-radius: 12px;
-            font-family: 'Inter', sans-serif; /* Uniformisé */
-            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px; 
             font-weight: 500;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
+            transition: border-color 0.2s;
+            -moz-appearance: textfield; 
         }
-
-        input[type="number"]:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px var(--primary-glow);
-        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type="number"]:focus { border-color: var(--primary); }
+        input[type="number"]::placeholder { color: rgba(148, 163, 184, 0.4); }
 
         .currency-symbol {
-            position: absolute;
-            right: 16px;
-            color: var(--text-muted);
-            font-size: 14px;
-            pointer-events: none;
+            position: absolute; right: 16px; color: var(--text-muted);
+            font-size: 16px; pointer-events: none;
         }
 
-        /* Switch ACRE Stylisé */
+        /* Switch ACRE */
         .switch-container {
             background: var(--bg-input);
             padding: 12px 16px;
             border-radius: 12px;
             border: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: 0.2s;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer; transition: 0.2s;
         }
-        .switch-container:hover { border-color: var(--text-muted); }
-
         .switch-label { font-size: 14px; font-weight: 500; }
-        .switch-sub { font-size: 11px; color: var(--text-muted); display: block; }
+        .switch-sub { font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px; }
 
         .toggle-switch {
-            position: relative;
-            width: 44px; height: 24px;
-            background: #334155;
-            border-radius: 20px;
-            transition: 0.3s;
+            position: relative; width: 44px; height: 24px;
+            background: #334155; border-radius: 20px; transition: 0.3s;
         }
         .toggle-switch::after {
-            content: '';
-            position: absolute;
-            top: 2px; left: 2px;
-            width: 20px; height: 20px;
-            background: white;
-            border-radius: 50%;
+            content: ''; position: absolute; top: 2px; left: 2px;
+            width: 20px; height: 20px; background: white; border-radius: 50%;
             transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
-
+        
         input[type="checkbox"] { display: none; }
         input[type="checkbox"]:checked + .switch-container .toggle-switch { background: var(--primary); }
         input[type="checkbox"]:checked + .switch-container .toggle-switch::after { transform: translateX(20px); }
-
         input[type="checkbox"]:checked + .switch-container { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
 
         /* Détails avancés */
@@ -171,104 +126,77 @@
             list-style: none; display: flex; align-items: center; gap: 8px; font-weight: 500;
         }
         summary::before { content: '⚙️'; font-size: 14px; }
-        summary:hover { color: var(--primary); }
         .advanced-inputs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
 
-        /* --- RESULTATS (Droite) --- */
+        /* --- RESULTATS --- */
         .results-grid {
-            display: grid;
-            gap: 20px;
-            grid-template-areas: 
-                "total"
-                "freelance"
-                "are";
-        }
-
-        @media (min-width: 600px) {
-            .results-grid {
-                grid-template-columns: 1fr 1fr;
-                grid-template-areas: 
-                    "total total"
-                    "freelance are";
-            }
+            display: grid; gap: 20px;
+            grid-template-areas: "total" "freelance" "are";
         }
 
         .result-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            padding: 24px;
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 160px;
+            padding: 24px; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+            min-height: 140px;
         }
+        .result-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; }
 
-        .result-card::before {
-            content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
-        }
-
-        /* Carte TOTAL */
         .card-total {
             grid-area: total;
             background: linear-gradient(145deg, rgba(16, 185, 129, 0.1) 0%, var(--bg-card) 60%);
             border: 1px solid rgba(16, 185, 129, 0.3);
-            min-height: auto;
-            padding: 32px 24px;
-            align-items: center;
-            text-align: center;
+            text-align: center; align-items: center; padding: 32px 20px;
         }
-        .card-total h3 { color: var(--success); font-size: 13px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; font-weight: 600; }
-        .card-total .amount {
-            font-family: 'Inter', sans-serif; /* Uniformisé */
-            font-size: 48px;
-            font-weight: 700;
-            color: var(--success);
-            text-shadow: 0 0 30px rgba(16, 185, 129, 0.15);
-            letter-spacing: -1px;
+        .card-total h3 { color: var(--success); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; }
+        .card-total .amount { 
+            font-size: 42px; font-weight: 700; color: var(--success); 
+            text-shadow: 0 0 30px rgba(16, 185, 129, 0.15); letter-spacing: -1px;
         }
-        .card-total .sub { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+        .card-total .sub { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
 
-        /* Carte Freelance */
         .card-freelance { grid-area: freelance; }
         .card-freelance::before { background: #3b82f6; }
-
-        /* Carte ARE */
+        
         .card-are { grid-area: are; }
         .card-are::before { background: var(--warning); }
 
-        .card-title { font-size: 14px; color: var(--text-muted); margin-bottom: 4px; display: flex; justify-content: space-between; align-items: center; font-weight: 500;}
-
-        .card-amount {
-            font-family: 'Inter', sans-serif; /* Uniformisé */
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-            margin-top: auto;
-            letter-spacing: -0.5px;
-        }
-
-        .card-desc { font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; }
-
+        .card-title { font-size: 14px; color: var(--text-muted); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: 500;}
+        .card-amount { font-size: 26px; font-weight: 700; color: white; margin-top: auto; letter-spacing: -0.5px; }
+        .card-desc { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.5; }
+        
         .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
         .bg-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
         .bg-orange { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
 
+        /* --- DESKTOP --- */
+        @media (min-width: 900px) {
+            .dashboard {
+                grid-template-columns: 350px 1fr;
+                align-items: start; margin-top: 40px;
+            }
+            .settings-card { position: sticky; top: 20px; }
+            .results-grid {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas: "total total" "freelance are";
+            }
+            .card-total .amount { font-size: 48px; }
+        }
     </style>
 </head>
 <body>
 
 <div class="dashboard">
-
+    
     <aside class="settings-card">
         <h2>Paramètres du mois</h2>
 
         <div class="input-group">
             <label for="ca">Chiffre d'Affaires HT</label>
             <div class="input-wrapper">
-                <input type="number" id="ca" value="3920" placeholder="0">
+                <input type="number" id="ca" placeholder="0" inputmode="decimal">
                 <span class="currency-symbol">€</span>
             </div>
         </div>
@@ -285,26 +213,26 @@
         </label>
 
         <details>
-            <summary>Paramètres avancés (Taux, ARE...)</summary>
+            <summary>Paramètres avancés</summary>
             <div class="advanced-inputs">
                 <div>
                     <label>Alloc. Jour</label>
-                    <input type="number" id="aj" value="82.80">
+                    <input type="number" id="aj" value="82.80" inputmode="decimal">
                 </div>
                 <div>
                     <label>SJR Ref.</label>
-                    <input type="number" id="sjr" value="145.27">
+                    <input type="number" id="sjr" value="145.27" inputmode="decimal">
                 </div>
                 <div style="grid-column: span 2; margin-top: 8px;">
                     <label>Taux Impôt (%)</label>
-                    <input type="number" id="impot" value="12">
+                    <input type="number" id="impot" value="12" inputmode="decimal">
                 </div>
             </div>
         </details>
     </aside>
 
     <main class="results-grid">
-
+        
         <div class="result-card card-total">
             <h3>Net dans la poche</h3>
             <div class="amount" id="total">0,00 €</div>
@@ -330,7 +258,7 @@
                 <span class="badge bg-orange">ARE</span>
             </div>
             <div class="card-desc" id="are-desc">
-                Calcul en cours...
+                En attente de saisie...
             </div>
             <div class="card-amount" id="net-are">0,00 €</div>
         </div>
@@ -340,14 +268,12 @@
 </div>
 
 <script>
-    // Configuration de base
     const elements = {
         ca: document.getElementById('ca'),
         acre: document.getElementById('acre'),
         aj: document.getElementById('aj'),
         sjr: document.getElementById('sjr'),
         impot: document.getElementById('impot'),
-        // Outputs
         total: document.getElementById('total'),
         netFreelance: document.getElementById('net-freelance'),
         netAre: document.getElementById('net-are'),
@@ -356,10 +282,10 @@
     };
 
     const CONSTANTS = {
-        CFP: 0.002,         // Contribution Formation Pro (0.2%)
-        ABATTEMENT: 0.34,   // Abattement forfaitaire BNC
-        TAUX_RETRAITE: 0.03,// 3% du SJR
-        TAUX_CSG: 0.0624    // Estiamtion CSG/CRDS sur ARE
+        CFP: 0.002,         
+        ABATTEMENT: 0.34,   
+        TAUX_RETRAITE: 0.03,
+        TAUX_CSG: 0.0624    
     };
 
     const formatMoney = (amount) => {
@@ -371,70 +297,61 @@
     };
 
     function calculate() {
-        // 1. Récupération des valeurs
         const ca = parseFloat(elements.ca.value) || 0;
         const hasAcre = elements.acre.checked;
         const aj = parseFloat(elements.aj.value) || 0;
         const sjr = parseFloat(elements.sjr.value) || 0;
         const txImpot = parseFloat(elements.impot.value) || 0;
 
-        // 2. Calcul Freelance
-        const tauxUrssaf = hasAcre ? 0.123 : 0.246; // 12.3% ou 24.6%
+        // 1. Calcul Freelance
+        const tauxUrssaf = hasAcre ? 0.123 : 0.246; 
         const chargesUrssaf = ca * (tauxUrssaf + CONSTANTS.CFP);
-
-        // Impôt Freelance (Estimatif basé sur l'abattement)
+        
         const baseImposableFreelance = ca * (1 - CONSTANTS.ABATTEMENT);
         const impotFreelance = baseImposableFreelance * (txImpot / 100);
-
+        
         const netFreelance = ca - chargesUrssaf - impotFreelance;
 
-        // 3. Calcul ARE (Algorithme France Travail)
-        const revenuBrutFT = ca * (1 - CONSTANTS.ABATTEMENT); // CA - 34%
-        const deductionFT = revenuBrutFT * 0.70; // 70% du Brut
-
-        const areTheorique = aj * 30; // Base mois
+        // 2. Calcul ARE
+        const revenuBrutFT = ca * (1 - CONSTANTS.ABATTEMENT); 
+        const deductionFT = revenuBrutFT * 0.70; 
+        
+        const areTheorique = aj * 30; 
         const soldeAre = areTheorique - deductionFT;
-
+        
         let joursIndemnises = 0;
         let netAre = 0;
         let descriptionAre = "Revenu freelance trop élevé pour un complément ce mois-ci.";
 
-        if (soldeAre > 0) {
-            // Arrondi au jour le plus proche
+        if (ca === 0 && elements.ca.value === "") {
+             descriptionAre = "Saisissez votre CA pour voir le calcul.";
+        } else if (soldeAre > 0) {
             joursIndemnises = Math.round(soldeAre / aj);
-
-            // Calcul du Net ARE réel
             const brutAreReel = joursIndemnises * aj;
-
-            // Charges sur l'ARE
             const retraite = joursIndemnises * (sjr * CONSTANTS.TAUX_RETRAITE);
             const csgCrds = brutAreReel * CONSTANTS.TAUX_CSG;
-
             const netAvantImpot = brutAreReel - retraite - csgCrds;
             const impotAre = Math.max(0, netAvantImpot * (txImpot / 100));
-
+            
             netAre = netAvantImpot - impotAre;
-
+            
             descriptionAre = `
                 <span style="color:#f8fafc; font-weight:600;">${joursIndemnises} jours</span> indemnisés.<br>
-                <span style="opacity:0.7">Basé sur une déduction de ${formatMoney(deductionFT)} (70% revenu brut).</span>
+                <span style="opacity:0.7">Basé sur une déduction de ${formatMoney(deductionFT)}.</span>
             `;
         }
 
         const totalSuperNet = netFreelance + netAre;
 
-        // 4. Mise à jour UI
         elements.netFreelance.textContent = formatMoney(netFreelance);
         elements.netAre.textContent = formatMoney(netAre);
         elements.total.textContent = formatMoney(totalSuperNet);
-
         elements.areDesc.innerHTML = descriptionAre;
-        elements.txtUrssaf.textContent = hasAcre
-            ? "Taux URSSAF: 12.3% (ACRE Active)"
+        elements.txtUrssaf.textContent = hasAcre 
+            ? "Taux URSSAF: 12.3% (ACRE Active)" 
             : "Taux URSSAF: 24.6% (Standard)";
     }
 
-    // Event Listeners
     Object.values(elements).forEach(el => {
         if(el.tagName === 'INPUT') {
             el.addEventListener('input', calculate);
@@ -442,9 +359,7 @@
         }
     });
 
-    // Init
     calculate();
-
 </script>
 
 </body>
