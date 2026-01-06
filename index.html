@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calculateur Freelance & ARE</title>
-    
+    <title>Calculateur Freelance & ARE (Mémoire)</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
@@ -50,7 +50,7 @@
             border-radius: var(--radius);
             padding: 24px;
             z-index: 10;
-            position: relative; 
+            position: relative;
         }
 
         h2 {
@@ -60,7 +60,7 @@
         }
 
         .input-group { margin-bottom: 20px; }
-        
+
         label {
             display: block; font-size: 13px; font-weight: 500;
             color: var(--text-muted); margin-bottom: 8px;
@@ -73,14 +73,14 @@
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: white;
-            padding: 16px; 
+            padding: 16px;
             border-radius: 12px;
             font-family: 'Inter', sans-serif;
-            font-size: 18px; 
+            font-size: 18px;
             font-weight: 500;
             outline: none;
             transition: border-color 0.2s;
-            -moz-appearance: textfield; 
+            -moz-appearance: textfield;
         }
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
@@ -113,7 +113,7 @@
             width: 20px; height: 20px; background: white; border-radius: 50%;
             transition: 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
         }
-        
+
         input[type="checkbox"] { display: none; }
         input[type="checkbox"]:checked + .switch-container .toggle-switch { background: var(--primary); }
         input[type="checkbox"]:checked + .switch-container .toggle-switch::after { transform: translateX(20px); }
@@ -151,22 +151,22 @@
             text-align: center; align-items: center; padding: 32px 20px;
         }
         .card-total h3 { color: var(--success); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; }
-        .card-total .amount { 
-            font-size: 42px; font-weight: 700; color: var(--success); 
+        .card-total .amount {
+            font-size: 42px; font-weight: 700; color: var(--success);
             text-shadow: 0 0 30px rgba(16, 185, 129, 0.15); letter-spacing: -1px;
         }
         .card-total .sub { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
 
         .card-freelance { grid-area: freelance; }
         .card-freelance::before { background: #3b82f6; }
-        
+
         .card-are { grid-area: are; }
         .card-are::before { background: var(--warning); }
 
         .card-title { font-size: 14px; color: var(--text-muted); margin-bottom: 6px; display: flex; justify-content: space-between; align-items: center; font-weight: 500;}
         .card-amount { font-size: 26px; font-weight: 700; color: white; margin-top: auto; letter-spacing: -0.5px; }
         .card-desc { font-size: 13px; color: var(--text-muted); margin-top: 10px; line-height: 1.5; }
-        
+
         .badge { font-size: 10px; padding: 4px 8px; border-radius: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;}
         .bg-blue { background: rgba(59, 130, 246, 0.2); color: #60a5fa; }
         .bg-orange { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
@@ -189,7 +189,7 @@
 <body>
 
 <div class="dashboard">
-    
+
     <aside class="settings-card">
         <h2>Paramètres du mois</h2>
 
@@ -232,7 +232,7 @@
     </aside>
 
     <main class="results-grid">
-        
+
         <div class="result-card card-total">
             <h3>Net dans la poche</h3>
             <div class="amount" id="total">0,00 €</div>
@@ -282,10 +282,10 @@
     };
 
     const CONSTANTS = {
-        CFP: 0.002,         
-        ABATTEMENT: 0.34,   
+        CFP: 0.002,
+        ABATTEMENT: 0.34,
         TAUX_RETRAITE: 0.03,
-        TAUX_CSG: 0.0624    
+        TAUX_CSG: 0.0624
     };
 
     const formatMoney = (amount) => {
@@ -296,6 +296,33 @@
         }).format(amount);
     };
 
+    // --- FONCTIONS DE SAUVEGARDE ---
+    function loadSavedSettings() {
+        // On charge tout SAUF le CA
+        const idsToLoad = ['acre', 'aj', 'sjr', 'impot'];
+
+        idsToLoad.forEach(id => {
+            const savedValue = localStorage.getItem('calc_' + id);
+            if (savedValue !== null) {
+                if (elements[id].type === 'checkbox') {
+                    elements[id].checked = (savedValue === 'true');
+                } else {
+                    elements[id].value = savedValue;
+                }
+            }
+        });
+    }
+
+    function saveSetting(e) {
+        const id = e.target.id;
+        // On ne sauvegarde PAS le CA
+        if (id === 'ca') return;
+
+        const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+        localStorage.setItem('calc_' + id, value);
+    }
+    // --------------------------------
+
     function calculate() {
         const ca = parseFloat(elements.ca.value) || 0;
         const hasAcre = elements.acre.checked;
@@ -304,27 +331,27 @@
         const txImpot = parseFloat(elements.impot.value) || 0;
 
         // 1. Calcul Freelance
-        const tauxUrssaf = hasAcre ? 0.123 : 0.246; 
+        const tauxUrssaf = hasAcre ? 0.123 : 0.246;
         const chargesUrssaf = ca * (tauxUrssaf + CONSTANTS.CFP);
-        
+
         const baseImposableFreelance = ca * (1 - CONSTANTS.ABATTEMENT);
         const impotFreelance = baseImposableFreelance * (txImpot / 100);
-        
+
         const netFreelance = ca - chargesUrssaf - impotFreelance;
 
         // 2. Calcul ARE
-        const revenuBrutFT = ca * (1 - CONSTANTS.ABATTEMENT); 
-        const deductionFT = revenuBrutFT * 0.70; 
-        
-        const areTheorique = aj * 30; 
+        const revenuBrutFT = ca * (1 - CONSTANTS.ABATTEMENT);
+        const deductionFT = revenuBrutFT * 0.70;
+
+        const areTheorique = aj * 30;
         const soldeAre = areTheorique - deductionFT;
-        
+
         let joursIndemnises = 0;
         let netAre = 0;
         let descriptionAre = "Revenu freelance trop élevé pour un complément ce mois-ci.";
 
         if (ca === 0 && elements.ca.value === "") {
-             descriptionAre = "Saisissez votre CA pour voir le calcul.";
+            descriptionAre = "Saisissez votre CA pour voir le calcul.";
         } else if (soldeAre > 0) {
             joursIndemnises = Math.round(soldeAre / aj);
             const brutAreReel = joursIndemnises * aj;
@@ -332,9 +359,9 @@
             const csgCrds = brutAreReel * CONSTANTS.TAUX_CSG;
             const netAvantImpot = brutAreReel - retraite - csgCrds;
             const impotAre = Math.max(0, netAvantImpot * (txImpot / 100));
-            
+
             netAre = netAvantImpot - impotAre;
-            
+
             descriptionAre = `
                 <span style="color:#f8fafc; font-weight:600;">${joursIndemnises} jours</span> indemnisés.<br>
                 <span style="opacity:0.7">Basé sur une déduction de ${formatMoney(deductionFT)}.</span>
@@ -347,19 +374,30 @@
         elements.netAre.textContent = formatMoney(netAre);
         elements.total.textContent = formatMoney(totalSuperNet);
         elements.areDesc.innerHTML = descriptionAre;
-        elements.txtUrssaf.textContent = hasAcre 
-            ? "Taux URSSAF: 12.3% (ACRE Active)" 
+        elements.txtUrssaf.textContent = hasAcre
+            ? "Taux URSSAF: 12.3% (ACRE Active)"
             : "Taux URSSAF: 24.6% (Standard)";
     }
 
+    // Initialisation
+    loadSavedSettings();
+    calculate();
+
+    // Events Listeners
     Object.values(elements).forEach(el => {
         if(el.tagName === 'INPUT') {
-            el.addEventListener('input', calculate);
-            el.addEventListener('change', calculate);
+            // Au changement : on calcule ET on sauvegarde
+            el.addEventListener('input', (e) => {
+                calculate();
+                saveSetting(e);
+            });
+            el.addEventListener('change', (e) => {
+                calculate();
+                saveSetting(e);
+            });
         }
     });
 
-    calculate();
 </script>
 
 </body>
