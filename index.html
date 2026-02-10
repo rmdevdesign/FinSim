@@ -255,7 +255,7 @@
             <div class="card-desc">
                 CA encaissé moins URSSAF et Impôts estimés.
                 <br>
-                <span id="txt-urssaf" style="opacity: 0.6; font-size: 11px;">Taux URSSAF: 12.3%</span>
+                <span id="txt-urssaf" style="opacity: 0.6; font-size: 11px;">Taux URSSAF: 12.8%</span>
             </div>
             <div class="card-amount" id="net-freelance">0,00 €</div>
         </div>
@@ -336,7 +336,7 @@
         const txImpot = parseFloat(elements.impot.value) || 0;
 
         // 1. Calcul Freelance
-        const tauxUrssaf = hasAcre ? 0.123 : 0.246; 
+        const tauxUrssaf = hasAcre ? 0.128 : 0.256; 
         const chargesUrssaf = ca * (tauxUrssaf + CONSTANTS.CFP);
         const baseImposableFreelance = ca * (1 - CONSTANTS.ABATTEMENT);
         const impotFreelance = baseImposableFreelance * (txImpot / 100);
@@ -389,8 +389,8 @@
         elements.total.textContent = formatMoney(totalSuperNet);
         elements.areDesc.innerHTML = descriptionAre;
         elements.txtUrssaf.textContent = hasAcre 
-            ? "Taux URSSAF: 12.3% (ACRE Active)" 
-            : "Taux URSSAF: 24.6% (Standard)";
+            ? "Taux URSSAF: 12.8% (ACRE Active)" 
+            : "Taux URSSAF: 25.6% (Standard)";
     }
 
     // Initialisation
