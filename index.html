@@ -76,29 +76,46 @@
 
         .input-wrapper { position: relative; display: flex; align-items: center; }
 
-        input[type="number"] {
+        input[type="number"],
+        input[type="text"] {
             width: 100%;
             background: var(--bg-input);
             border: 1px solid var(--border);
             color: white;
-            padding: 16px; 
+            padding: 16px;
             border-radius: 12px;
             font-family: 'Inter', sans-serif;
-            font-size: 18px; 
+            font-size: 18px;
             font-weight: 500;
             outline: none;
             transition: border-color 0.2s;
-            -moz-appearance: textfield; 
+            -moz-appearance: textfield;
         }
         input[type="number"]::-webkit-outer-spin-button,
         input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
-        input[type="number"]:focus { border-color: var(--primary); }
-        input[type="number"]::placeholder { color: rgba(148, 163, 184, 0.4); }
+        input[type="number"]:focus,
+        input[type="text"]:focus { border-color: var(--primary); }
+        input[type="number"]::placeholder,
+        input[type="text"]::placeholder { color: rgba(148, 163, 184, 0.4); }
 
         .currency-symbol {
             position: absolute; right: 16px; color: var(--text-muted);
             font-size: 16px; pointer-events: none;
+            transition: opacity 0.15s;
         }
+        .currency-symbol.is-hidden { opacity: 0; }
+
+        input.is-invalid { border-color: #ef4444; }
+        input.has-preview { padding-right: 120px; }
+
+        .expression-preview {
+            position: absolute; right: 16px;
+            font-size: 13px; font-weight: 600; color: var(--success);
+            pointer-events: none; white-space: nowrap;
+            opacity: 0; transform: translateY(2px);
+            transition: opacity 0.15s, transform 0.15s;
+        }
+        .expression-preview.is-visible { opacity: 1; transform: translateY(0); }
 
         /* Switch ACRE */
         .switch-container {
@@ -204,8 +221,9 @@
         <div class="input-group">
             <label for="ca">Chiffre d'Affaires HT</label>
             <div class="input-wrapper">
-                <input type="number" id="ca" placeholder="0" inputmode="decimal">
-                <span class="currency-symbol">€</span>
+                <input type="text" id="ca" placeholder="0" autocomplete="off">
+                <span class="currency-symbol" id="ca-currency">€</span>
+                <span class="expression-preview" id="ca-preview"></span>
             </div>
         </div>
 
@@ -286,8 +304,77 @@
         netFreelance: document.getElementById('net-freelance'),
         netAre: document.getElementById('net-are'),
         areDesc: document.getElementById('are-desc'),
-        txtUrssaf: document.getElementById('txt-urssaf')
+        txtUrssaf: document.getElementById('txt-urssaf'),
+        caPreview: document.getElementById('ca-preview'),
+        caCurrency: document.getElementById('ca-currency')
     };
+
+    // Petit parseur arithmétique (+ - * / parenthèses) pour permettre
+    // de saisir des expressions comme "100+100" dans le champ CA.
+    function evaluateExpression(input) {
+        if (input === undefined || input === null) return NaN;
+        const expr = input.replace(/,/g, '.').replace(/\s+/g, '');
+        if (expr === '') return 0;
+        if (!/^[0-9+\-*/.()]+$/.test(expr)) return NaN;
+
+        let pos = 0;
+        const peek = () => expr[pos];
+        const consume = () => expr[pos++];
+
+        function parseExpr() {
+            let value = parseTerm();
+            while (peek() === '+' || peek() === '-') {
+                const op = consume();
+                const rhs = parseTerm();
+                value = op === '+' ? value + rhs : value - rhs;
+            }
+            return value;
+        }
+        function parseTerm() {
+            let value = parseFactor();
+            while (peek() === '*' || peek() === '/') {
+                const op = consume();
+                const rhs = parseFactor();
+                value = op === '*' ? value * rhs : value / rhs;
+            }
+            return value;
+        }
+        function parseFactor() {
+            if (peek() === '+') { consume(); return parseFactor(); }
+            if (peek() === '-') { consume(); return -parseFactor(); }
+            if (peek() === '(') {
+                consume();
+                const value = parseExpr();
+                if (peek() !== ')') return NaN;
+                consume();
+                return value;
+            }
+            const start = pos;
+            while (pos < expr.length && /[0-9.]/.test(peek())) pos++;
+            if (start === pos) return NaN;
+            return parseFloat(expr.slice(start, pos));
+        }
+
+        const result = parseExpr();
+        if (pos !== expr.length || Number.isNaN(result)) return NaN;
+        return result;
+    }
+
+    function updateCaPreview() {
+        const raw = elements.ca.value;
+        const isPlainNumber = /^-?[0-9]*\.?[0-9]*$/.test(raw.replace(',', '.'));
+        const isInvalid = raw.trim() !== '' && Number.isNaN(evaluateExpression(raw));
+        const showResult = raw.trim() !== '' && !isPlainNumber && !isInvalid;
+
+        elements.ca.classList.toggle('is-invalid', isInvalid);
+        elements.ca.classList.toggle('has-preview', showResult);
+        elements.caCurrency.classList.toggle('is-hidden', showResult);
+        elements.caPreview.classList.toggle('is-visible', showResult);
+
+        if (showResult) {
+            elements.caPreview.textContent = formatMoney(evaluateExpression(raw));
+        }
+    }
 
     const CONSTANTS = {
         CFP: 0.002,         
@@ -329,7 +416,8 @@
     }
 
     function calculate() {
-        const ca = parseFloat(elements.ca.value) || 0;
+        const caValue = evaluateExpression(elements.ca.value);
+        const ca = Number.isNaN(caValue) ? 0 : caValue;
         const hasAcre = elements.acre.checked;
         const aj = parseFloat(elements.aj.value) || 0;
         const sjr = parseFloat(elements.sjr.value) || 0;
@@ -395,12 +483,17 @@
 
     // Initialisation
     loadSavedSettings();
+    updateCaPreview();
     calculate();
 
     // Events Listeners
     Object.values(elements).forEach(el => {
         if(el.tagName === 'INPUT') {
-            el.addEventListener('input', (e) => { calculate(); saveSetting(e); });
+            el.addEventListener('input', (e) => {
+                if (e.target === elements.ca) updateCaPreview();
+                calculate();
+                saveSetting(e);
+            });
             el.addEventListener('change', (e) => { calculate(); saveSetting(e); });
         }
     });
