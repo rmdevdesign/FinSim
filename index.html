@@ -227,6 +227,15 @@
         @media (min-width: 600px) {
             .results-grid > .result-card:not(.card-total) { flex: 1 1 0; }
         }
+        .ca-operators { display: none; gap: 8px; margin-top: 8px; }
+        .ca-operators button {
+            flex: 1; min-height: 44px; border: 1px solid var(--border);
+            border-radius: 8px; background: var(--bg-input); color: var(--text-main);
+            font: 500 22px 'Inter', sans-serif; cursor: pointer; touch-action: manipulation;
+        }
+        .ca-operators button:active { background: var(--primary); }
+        .ca-operators button:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+        @media (max-width: 899px), (pointer: coarse) { .ca-operators { display: flex; } }
         @media (prefers-reduced-motion: reduce) {
             *, *::after { transition: none !important; }
         }
@@ -245,6 +254,12 @@
                 <input type="text" id="ca" inputmode="decimal" placeholder="Ex. 3 000" autocomplete="off" spellcheck="false" aria-describedby="ca-hint ca-error">
                 <span class="currency-symbol" id="ca-currency">€</span>
                 <span class="expression-preview" id="ca-preview"></span>
+            </div>
+            <div class="ca-operators" role="group" aria-label="Opérateurs de calcul">
+                <button type="button" data-operator="+" aria-label="Ajouter">+</button>
+                <button type="button" data-operator="-" aria-label="Soustraire">−</button>
+                <button type="button" data-operator="/" aria-label="Diviser">÷</button>
+                <button type="button" data-operator="*" aria-label="Multiplier">×</button>
             </div>
             <p class="input-hint" id="ca-hint">Montant encaissé · calculs acceptés : 1 500 + 500</p>
             <p class="input-error" id="ca-error" role="status" hidden>Saisissez un montant positif ou un calcul valide.</p>
@@ -569,6 +584,20 @@
     calculate();
 
     // Events Listeners
+    document.querySelectorAll('[data-operator]').forEach(button => {
+        // Garder le clavier ouvert et la sélection du champ au toucher.
+        button.addEventListener('pointerdown', event => event.preventDefault());
+        button.addEventListener('click', () => {
+            const input = elements.ca;
+            const start = input.selectionStart ?? input.value.length;
+            const end = input.selectionEnd ?? start;
+            input.setRangeText(button.dataset.operator, start, end, 'end');
+            input.focus({ preventScroll: true });
+            updateCaPreview();
+            calculate();
+        });
+    });
+
     Object.values(elements).forEach(el => {
         if(el.tagName === 'INPUT') {
             el.addEventListener('input', (e) => {
